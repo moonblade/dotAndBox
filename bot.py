@@ -28,10 +28,10 @@ class Logic:
         self.board.move(self.opp,p1,p2)
 
     def myMove(self):
-        x=randint(0,19)
+        x=randint(0,18)
         y=randint(0,9)
         while(not self.board.isFree((x,y))):
-            x=randint(0,19)
+            x=randint(0,18)
             y=randint(0,9)
         self.board.moveBP(self.me, (x, y));
         return self.toString(self.board.boardToPoint((x,y)))
@@ -96,7 +96,7 @@ if __name__=="__main__":
         elif(string[0]=="OPPONENT_MOVE"):
             debug("his " + string[1])
             l.opponent_move(string[1])
-        elif(string[0]=="END"):
+        elif(string[0]=="STOP"):
             break;
-        # l.print();
+        l.print()
     f.close()
