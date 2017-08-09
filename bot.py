@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2.7
 from random import randint
 import sys
 
@@ -36,8 +36,8 @@ class Logic:
         self.board.moveBP(self.me, (x, y));
         return self.toString(self.board.boardToPoint((x,y)))
 
-    def print(self):
-        self.board.print()
+    def view(self):
+        self.board.view()
 
     def toString(self, point):
         return (str(point[0])+","+str(point[1])).replace(" ","")
@@ -48,7 +48,7 @@ class Board:
         self.boardSize = 10
         self.board = [[-1 if (x==self.boardSize-1 and y%2==0) else 0 for x in range(self.boardSize)] for y in range(self.boardSize*2-1)]
     
-    def print(self):
+    def view(self):
         for x in range(len(self.board)):
             print(self.board[x])
         print()
@@ -81,14 +81,14 @@ class Board:
 
 if __name__=="__main__":
     b=Board()
-    string=input().split()
+    string=raw_input().split()
     if(string[0]=="START"):
         l=Logic(b,int(string[1]));
     else:
         l=Logic(b,1);
 
     while(True):
-        string=input().split()
+        string=raw_input().split()
         if(string[0]=="YOUR_MOVE"):
             move=l.myMove()
             debug("my " + move)
@@ -98,5 +98,5 @@ if __name__=="__main__":
             l.opponent_move(string[1])
         elif(string[0]=="STOP"):
             break;
-        l.print()
+        # l.view()
     f.close()
