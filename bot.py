@@ -4,8 +4,9 @@ import sys
 
 f=open(sys.argv[1],'w')
 def debug(string):
-    f.write(string)
+    f.write(str(string))
     f.write("\n")
+    f.flush()
 
 
 
@@ -50,8 +51,8 @@ class Board:
     
     def view(self):
         for x in range(len(self.board)):
-            print(self.board[x])
-        print()
+            debug(self.board[x])
+        debug("")
 
     def move(self, player, p1, p2):
         point = self.pointToBoard(p1, p2)
@@ -81,22 +82,25 @@ class Board:
 
 if __name__=="__main__":
     b=Board()
+    debug("starting")
     string=raw_input().split()
     if(string[0]=="START"):
         l=Logic(b,int(string[1]));
     else:
         l=Logic(b,1);
 
-    while(True):
+    while True:
         string=raw_input().split()
+        debug(string)
         if(string[0]=="YOUR_MOVE"):
             move=l.myMove()
             debug("my " + move)
-            print(move)
+            sys.stdout.write(move+"\n")
+            sys.stdout.flush()
         elif(string[0]=="OPPONENT_MOVE"):
             debug("his " + string[1])
             l.opponent_move(string[1])
         elif(string[0]=="STOP"):
             break;
-        # l.view()
+        l.view()
     f.close()
