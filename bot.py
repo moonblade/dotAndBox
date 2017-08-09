@@ -100,14 +100,17 @@ class Board:
 
     def sides(self, boxTL):
         # top left bottom right
-        return [self.board[boxTL[0]][boxTL[1]][0]+self.board[boxTL[0]][boxTL[1]][1]+self.board[boxTL[0]+1][boxTL[1]][0]+self.board[boxTL[0]][boxTL[1]+1][1],self.board[boxTL[0]][boxTL[1]][0],self.board[boxTL[0]][boxTL[1]][1],self.board[boxTL[0]+1][boxTL[1]][0],self.board[boxTL[0]][boxTL[1]+1][1]]
+        return [self.get((boxTL[0],boxTL[1]),0)+self.get((boxTL[0],boxTL[1]),1)+self.get((boxTL[0]+1,boxTL[1]),0)+self.get((boxTL[0],boxTL[1]+1),1),self.get((boxTL[0],boxTL[1]),0),self.get((boxTL[0],boxTL[1]),1),self.get((boxTL[0]+1,boxTL[1]),0),self.get((boxTL[0],boxTL[1]+1),1)]
+
+    def get(self, point, orientation):
+        return self.board[point[0]][point[1]][orientation]
 
     def move(self, point, orientation):
         self.board[point[0]][point[1]][orientation]=1
 
 
     def isFree(self, point, orientation):
-        return self.board[point[0]][point[1]][orientation]==0
+        return self.get(point,orientation)==0
 
     def toString(self, point, orientation):
         if orientation==0:
