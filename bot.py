@@ -22,62 +22,57 @@ class Logic:
         p2=(int(move[7]),int(move[9]))
         if(p1[0]>p2[0] or p1[1]>p2[1]):
             p1,p2=p2,p1
-        return p1,p2
+        if(p1[0]<p2[0]):
+            # vertical
+            return p1,1
+        else:
+            # horizontal
+            return p1,0
 
     def opponent_move(self,move):
-        p1, p2 = self.clean(move)
-        self.board.move(self.opp,p1,p2)
+        p, orientation = self.clean(move)
+        self.board.move(p,orientation)
 
     def myMove(self):
-        x=randint(0,18)
+        x=randint(0,9)
         y=randint(0,9)
-        while(not self.board.isFree((x,y))):
-            x=randint(0,18)
+        orientation=randint(0,1)
+        while((x==9 and y==9) or (x==9 and orientation==1) or (y==9 and orientation==0) or not self.board.isFree((x,y),orientation)):
+            x=randint(0,9)
             y=randint(0,9)
-        self.board.moveBP(self.me, (x, y));
-        return self.toString(self.board.boardToPoint((x,y)))
+            orientation=randint(0,1)
+        self.board.move((x, y), orientation);
+        return self.board.toString((x,y),orientation)
 
     def view(self):
         self.board.view()
 
-    def toString(self, point):
-        return (str(point[0])+","+str(point[1])).replace(" ","")
-
-
 class Board:
     def __init__(self):
-        self.boardSize = 10
-        self.board = [[-1 if (x==self.boardSize-1 and y%2==0) else 0 for x in range(self.boardSize)] for y in range(self.boardSize*2-1)]
+        # RIGHT 0 and DOWN 1
+        self.board = [[[0,0] for x in range(10)] for y in range(10)]
     
     def view(self):
         for x in range(len(self.board)):
             debug(self.board[x])
         debug("")
 
-    def move(self, player, p1, p2):
-        point = self.pointToBoard(p1, p2)
-        self.moveBP(player,point)
+    def sides(self, boxTL):
+        # top left bottom right
+        return [self.board[boxTL[0]][boxTL[1]][0],self.board[boxTL[0]][boxTL[1]][1],self.board[boxTL[0]+1][boxTL[1]][0],self.board[boxTL[0]][boxTL[1]+1][1]]
 
-    def moveBP(self, player, bp):
-        self.board[bp[0]][bp[1]]=player
-
-    def isFree(self, p):
-        return self.board[p[0]][p[1]]==0
+    def move(self, point, orientation):
+        self.board[point[0]][point[1]][orientation]=1
 
 
-    def pointToBoard(self, p1, p2):
-        if(p1[0]<p2[0]):
-            return(2*p1[0]+1,p1[1])
-        elif(p1[1]<p2[1]):
-            return(2*p1[0],p1[1])
+    def isFree(self, point, orientation):
+        return self.board[point[0]][point[1]][orientation]==0
 
-    def boardToPoint(self, bp):
-        if(bp[0]%2==1):
-            # vertical
-            return ((bp[0]//2,bp[1]),(bp[0]//2+1,bp[1]))
-        else:
-            # horizontal
-            return ((bp[0]//2,bp[1]),(bp[0]//2,bp[1]+1))
+    def toString(self, point, orientation):
+        if orientation==0:
+            return str(point)+","+str((point[0],point[1]+1))
+        if orientation==1:
+            return str(point)+","+str((point[0]+1,point[1]))
 
 
 if __name__=="__main__":
