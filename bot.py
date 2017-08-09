@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 from random import randint
+import sys
+
+f=open(sys.argv[1],'w')
+def debug(string):
+    f.write(string)
+    f.write("\n")
+
+
+
 
 class Logic:
     def __init__(self, board, me):
@@ -81,10 +90,13 @@ if __name__=="__main__":
     while(True):
         string=input().split()
         if(string[0]=="YOUR_MOVE"):
-            print(l.myMove())
+            move=l.myMove()
+            debug("my " + move)
+            print(move)
         elif(string[0]=="OPPONENT_MOVE"):
+            debug("his " + string[1])
             l.opponent_move(string[1])
         elif(string[0]=="END"):
             break;
         # l.print();
-        
+    f.close()
