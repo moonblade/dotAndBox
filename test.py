@@ -2,10 +2,12 @@
 from random import randint
 import sys
 from turtle import *
+import time
 
 def debug(string):
-    pass
+    print(string)
 
+ticker=1000
 class Logic:
     def __init__(self, board, me):
         self.board = board
@@ -56,6 +58,7 @@ class Logic:
         return 0
 
     def myMove(self):
+        ticker=1000
         selected=-1
         best=-1000
         bestMove=[]
@@ -65,6 +68,8 @@ class Logic:
             if(score>best):
                 bestMove=move
                 selected=key
+            if(ticker<0):
+                break;
                         
         del self.moveSpace[selected]
         self.board.move(bestMove[0],bestMove[1]);
@@ -114,6 +119,9 @@ class Board:
 
     def nextBox(self, boxTL, point, orientation):
         # give box and one line, will give next box and its opening line
+        if point is None:
+            return
+
         sides=self.sides(boxTL)
 
         if(sides[0]==2):
@@ -145,7 +153,7 @@ class Board:
                 return [ (boxTL[0],boxTL[1]+1), (boxTL[0],boxTL[1]+1), 1]  if boxTL[1]<9 else None
 
         elif(sides[0]==3):
-            return None
+            return [boxTL, None, orientation]
         else:
             return None
 
@@ -206,6 +214,7 @@ class Board:
         return [self.get((boxTL[0],boxTL[1]),0)+self.get((boxTL[0],boxTL[1]),1)+self.get((boxTL[0]+1,boxTL[1]),0)+self.get((boxTL[0],boxTL[1]+1),1),self.get((boxTL[0],boxTL[1]),0),self.get((boxTL[0],boxTL[1]),1),self.get((boxTL[0]+1,boxTL[1]),0),self.get((boxTL[0],boxTL[1]+1),1)]
 
     def get(self, point, orientation):
+        ticker-=1
         return self.board&(1<<(point[0]*20+point[1]*2+orientation))
 
     def move(self, point, orientation):

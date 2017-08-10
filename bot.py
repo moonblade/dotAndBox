@@ -44,17 +44,19 @@ class Logic:
             return 6
 
         if(sidesLine[0][0]==3 or sidesLine[1][0]==3):
+            # return 3
             chainLength=self.board.chainLength(move[0],move[1])
-            return -100 if chainLength==2 else chainLength
-
-        if(sidesLine[0][0]<2 and sidesLine[1][0]<2):
-            saveBoard=self.board        
-            self.board.move(move[0],move[1])
-            chainLength=self.board.chainLength(move[0],move[1])
-            self.board=saveBoard
+            # return -100 if chainLength==2 else chainLength
             return chainLength
 
+        if(sidesLine[0][0]<2 and sidesLine[1][0]<2):
+            return 0
+            # self.board.move(move[0],move[1])
+            # chainLength=self.board.chainLength(move[0],move[1])
+            # return chainLength
+
         if(sidesLine[0][0]==2 or sidesLine[1][0]==2):
+            # return -1
             return -self.board.chainLength(move[0],move[1])
         return 0
 
@@ -66,6 +68,7 @@ class Logic:
             move=self.moveSpace[key]
             score=self.score(move)
             if(score>best):
+                best=score
                 bestMove=move
                 selected=key
                         
@@ -78,17 +81,15 @@ class Logic:
         self.board.view()
 
 class Board:
-    def __init__(self, b = None):
+    def __init__(self):
         # RIGHT 0 and DOWN 1
-        if b is None:
-            self.board = 0
-        else:
-            self.board = b
+        self.board = [[[0,0] for x in range(10)] for y in range(10)]
+        # self.board = 0
         self.saved = {}
         self.noc = 0
 
     def view(self):
-        debug(hex(self.board))
+        # debug(hex(self.board))
         debug("")
 
     def possible(self, point, orientation):
@@ -127,10 +128,10 @@ class Board:
                 else:
                     # left
                     sides[2]=1
-            if(boxTL[1]==point[1]):
+            elif(boxTL[1]==point[1]):
                 # bottom
                 sides[3]=1
-            if(boxTL[0]==point[0]):
+            elif(boxTL[0]==point[0]):
                 # right
                 sides[4]=1
             toMove=sides.index(0)
@@ -179,8 +180,8 @@ class Board:
         self.move(point, orientation)
         sidesLine=self.sidesLine(point, orientation)
         boxTL = self.getBoxTL(point, orientation)
-        if(boxTL[0] in self.saved):
-            return self.saved[boxTL[0]][0]
+        # if(boxTL[0] in self.saved):
+            # return self.saved[boxTL[0]][0]
         nextBox=[boxTL[0], point, orientation]
         updateList=[]
         while(nextBox is not None):
@@ -209,10 +210,12 @@ class Board:
         return [self.get((boxTL[0],boxTL[1]),0)+self.get((boxTL[0],boxTL[1]),1)+self.get((boxTL[0]+1,boxTL[1]),0)+self.get((boxTL[0],boxTL[1]+1),1),self.get((boxTL[0],boxTL[1]),0),self.get((boxTL[0],boxTL[1]),1),self.get((boxTL[0]+1,boxTL[1]),0),self.get((boxTL[0],boxTL[1]+1),1)]
 
     def get(self, point, orientation):
-        return self.board&(1<<(point[0]*20+point[1]*2+orientation))
+        return self.board[point[0]][point[1]][orientation]
+        # return self.board&(1<<(point[0]*20+point[1]*2+orientation))
 
     def move(self, point, orientation):
-        self.board|=1<<(point[0]*20+point[1]*2+orientation)
+        self.board[point[0]][point[1]][orientation]=1
+        # self.board|=1<<(point[0]*20+point[1]*2+orientation)
 
     def isFree(self, point, orientation):
         return self.get(point,orientation)==0
