@@ -1,13 +1,10 @@
 #!/usr/bin/env python2.7
 from random import randint
 import sys
+from turtle import *
 
-f=open(sys.argv[1],'w')
 def debug(string):
-    f.write(str(string))
-    f.write("\n")
-    f.flush()
-
+    pass
 
 class Logic:
     def __init__(self, board, me):
@@ -225,26 +222,22 @@ class Board:
 
 
 if __name__=="__main__":
-    b=Board()
-    debug("starting")
-    string=raw_input().split()
-    if(string[0]=="START"):
-        l=Logic(b,int(string[1]));
-    else:
-        l=Logic(b,1);
-
-    while True:
-        string=raw_input().split()
-        debug(string)
-        if(string[0]=="YOUR_MOVE"):
-            move=l.myMove()
-            debug("my " + move)
-            sys.stdout.write(move+"\n")
-            sys.stdout.flush()
-        elif(string[0]=="OPPONENT_MOVE"):
-            debug("his " + string[1])
-            l.opponent_move(string[1])
-        elif(string[0]=="STOP"):
-            break;
-        l.view()
-    f.close()
+    with open("controller") as f:
+        content = f.readlines()
+        # you may also want to remove whitespace characters like `\n` at the end of each line
+    content = [x.strip() for x in content] 
+    pen({"pendown":False})
+    for x in content:
+        x=x.split()
+        if x[2]=="Moved":
+            if(x[1]=="1"):
+                pencolor("red")
+            else:
+                pencolor("black")
+            setpos(int(x[3][2])*30,int(x[3][4])*30)
+            pen({"pendown":True})
+            begin_fill()
+            setpos(int(x[3][8])*30,int(x[3][10])*30)
+            pen({"pendown":False})
+            end_fill()
+    done()
